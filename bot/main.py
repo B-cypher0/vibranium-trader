@@ -2,6 +2,7 @@ import MetaTrader5 as mt5
 from data_fetch import connect, get_price_volume_data, SYMBOLS
 from signals import is_near_psych_level, is_volume_confirming, get_psych_level_range_position
 from smc import find_swing_points, detect_bos_choch, find_last_order_block, find_fair_value_gaps
+from notify import send_signal_alert
 
 
 def evaluate_signal(symbol, df):
@@ -69,4 +70,8 @@ if __name__ == "__main__":
             print(f"Order block: {result['order_block']}")
             print(f"Fair value gap: {result['fair_value_gap']}")
             print(f"\n>>> SIGNAL: {result['signal']} <<<")
+
+            if result['signal']:
+                sent = send_signal_alert(symbol, result)
+                print(f"Notification sent: {sent}")
         mt5.shutdown()
